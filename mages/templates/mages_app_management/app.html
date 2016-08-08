@@ -1,0 +1,135 @@
+{% extends "base-admin.html" %}
+{% block title %}MAGES Submission{% endblock %}}
+{% block content %}
+
+<style type="text/css">
+    .app-display {
+        padding-top: 8px;
+        font-family: Courier;
+    }
+</style>
+
+<h2>Panel Applications</h2>
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Panel Status:</label>
+        <div class="col-sm-6 app-display">
+            {% if app.status == c.PENDING and False %}  <!-- make this work later -->
+                <a href="mark?id={{ app.id }}&status={{ c.ACCEPTED }}">Accept</a>
+                or
+                <a href="mark?id={{ app.id }}&status={{ c.WAITLISTED }}">Waitlist</a>
+                or
+                <a href="mark?id={{ app.id }}&status={{ c.DECLINED }}">Decline</a>
+            {% else %}
+                <b>{{ app.status_label }}</b>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if app.status == c.ACCEPTED %}
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Event:</label>
+            <div class="col-sm-6 app-display">
+                {% if app.event_id %}
+                    <a href="../schedule/form?id={{ app.event_id }}">{{ app.event.name }}</a>
+                {% else %}
+                    <a href="associate?id={{ app.id }}">Click here</a> to associate this application with an event on the schedule
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Panel Name:</label>
+        <div class="col-sm-6 app-display">
+            {{ app.name }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Description:</label>
+        <div class="col-sm-6 app-display">
+            {{ app.description|linebreaksbr }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Panel Type:</label>
+        <div class="col-sm-6 app-display">
+            {{ app.presentation_label }}
+            {% if app.presentation == c.OTHER %}
+                <br/> {{ app.other_presentation }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Expected Length:</label>
+        <div class="col-sm-6 app-display">
+            {{ app.length }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Unavailability:</label>
+        <div class="col-sm-6 app-display">
+            {{ app.unavailable|linebreaksbr }}
+        </div>
+    </div>
+
+    {% if app.tech_needs or app.other_tech_needs %}
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Tech Needs:</label>
+            <div class="col-sm-6 app-display">
+                {{ app.tech_needs_labels|join:' / ' }}
+                {% if app.other_tech_needs %}
+                    <br/> {{ app.other_tech_needs }}
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if app.panelist_bringing %}
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Panelist is bringing:</label>
+            <div class="col-sm-6 app-display">
+                {{ app.panelist_bringing }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if app.affiliations %}
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Affiliations:</label>
+            <div class="col-sm-6 app-display">
+                {{ app.affiliations|linebreaksbr }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if app.past_attendance %}
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Past Attendance:</label>
+            <div class="col-sm-6 app-display">
+                {{ app.past_attendance }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Panelists:</label>
+        <div class="col-sm-6 app-display">
+            {% for panelist in app.applicants %}
+                <div>
+                    {{ panelist.full_name }} ({{ panelist.email }})
+                    {% if panelist.cellphone %}
+                        [{{ panelist.cellphone }}]
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</form>
+
+{% endblock %}
