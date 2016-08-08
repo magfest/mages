@@ -1,0 +1,5 @@
+{{ app.submitter.first_name }},
+
+We've recieved your application for a MAGES panel.
+
+{{ c.MAGES_EMAIL_SIGNATURE }}
