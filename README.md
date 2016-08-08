@@ -1,0 +1,2 @@
+# mages
+MAGES panel management
